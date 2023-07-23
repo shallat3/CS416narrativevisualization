@@ -1,5 +1,73 @@
 <HTML>
+
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <style>
+        body {
+          font-family: 'Arial', sans-serif;
+
+          background-color: white;
+          margin-top: 2.5%;
+          margin-bottom: 5%;
+          margin-left: 5%;
+          margin-right: 5%;
+          text-align: center;
+        }
+
+        svg {
+          background-color:lightgray;
+          opacity:0.3;
+          height:500px;
+          width:500px;
+          border-radius: 20px;
+        }
+
+        .left {
+          width: 25%;
+        }
+        .right {
+          width: 75%;
+        }
+
+
+        .column {
+          float: left
+        }
+
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+
+        
+        
+      </style>
+    
+  </head>
   <body>
-    <H1>Hello</H1>
+
+    <div class=row>
+      <div class="column left">
+        <h1>Schools in New York</h1>
+          <p style="color:darkslategray;" >Every year, students in New York City 
+            participate in a lottery in an attempt to further their education in the best educational institutions. This process 
+            seems very make-or-break, but how much does it actually matter? Here, we explore the relationships between Math and ELA scores and 
+            attendance in New York City's public schools.</p>
+      </div>
+      <div class="column right">
+        <svg style="height:90%; width:80%;"></svg>
+      </div>
+    </div>
+    
+    
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <script>
+      
+    </script>
+    
   </body>
 </HTML>
