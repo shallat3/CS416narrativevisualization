@@ -19,8 +19,8 @@
         svg {
           background-color:lightgray;
           opacity:0.3;
-          height:500px;
-          width:800px;
+          height:400px;
+          width:600px;
           border-radius: 20px;
         }
 
@@ -78,20 +78,18 @@
 
     <script>
 
-d3.csv("data/NYschools.csv").then(data => {
-      console.log("here")
-      width = 500;
-          height = 500;
-          margin = {top: 50,
-              left: 50,
-              right: 50,
-              bottom: 50
-            }
+    const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+    const width = 600 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+      d3.csv("data/NYschools.csv").then(data => {
+  
+
+      // Step 2: Load the data using D3.js
+    
       // Step 3: Define scales for mapping data values to the visualization space
       const xScale = d3.scaleLinear().domain([0, d3.max(data, d => +d.Student_Attendance_Rate)]).range([0, width]);
       const yScale = d3.scaleLinear().domain([0, d3.max(data, d => +d.avg_math_ela)]).range([height, 0]);
 
-      
       // Step 4: Create the SVG element for the scatterplot
       const svg = d3
         .select("#visualization")
@@ -106,8 +104,8 @@ d3.csv("data/NYschools.csv").then(data => {
         .data(data)
         .enter()
         .append("circle")
-        .attr("cx", d => xScale(+d.Student_Attendance_Rate))
-        .attr("cy", d => yScale(+d.avg_math_ela))
+        .attr("cx", d => xScale(+d.avg_math_ela))
+        .attr("cy", d => yScale(+d.Student_Attendance_Rate))
         .attr("r", 5) // Set the radius of the circles
         .attr("fill", "blue"); // Set the fill color of the circles
 
