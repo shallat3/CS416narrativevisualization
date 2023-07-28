@@ -20,7 +20,7 @@
           background-color:lightgray;
           opacity:0.3;
           height:500px;
-          width:500px;
+          width:800px;
           border-radius: 20px;
         }
 
@@ -58,7 +58,18 @@
             attendance in New York City's public schools.</p>
       </div>
       <div class="column right">
-        <svg style="height:90%; width:80%;"></svg>
+        <div id="marginbox" style="margin-left:10%; margin-right:10%; margin-bottom:5%; margin-top:5%;">
+          <div id="selectorbar" style="width:80%; float:center;">
+            <button id="backbutton" style="float:left;">back</button>
+            <button id="button1">1</button>
+            <button id="button2">2</button>
+            <button id="button3">3</button>
+            <button id="nextbutton" style="float:right;">next</button>
+          </div>
+          <svg id="visualization"></svg>
+          <p id="aftervis"></p>
+        </div>
+        
       </div>
     </div>
     
@@ -66,6 +77,79 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
 
     <script>
+
+d3.csv("data/NYschools.csv").then(data => {
+      console.log("here")
+      width = 500;
+          height = 500;
+          margin = {top: 50,
+              left: 50,
+              right: 50,
+              bottom: 50
+            }
+      // Step 3: Define scales for mapping data values to the visualization space
+      const xScale = d3.scaleLinear().domain([0, d3.max(data, d => +d.Student_Attendance_Rate)]).range([0, width]);
+      const yScale = d3.scaleLinear().domain([0, d3.max(data, d => +d.avg_math_ela)]).range([height, 0]);
+
+      
+      // Step 4: Create the SVG element for the scatterplot
+      const svg = d3
+        .select("#visualization")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      // Step 5: Bind the data to the SVG elements and create circles for each data point
+      const circles = svg
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(+d.Student_Attendance_Rate))
+        .attr("cy", d => yScale(+d.avg_math_ela))
+        .attr("r", 5) // Set the radius of the circles
+        .attr("fill", "blue"); // Set the fill color of the circles
+
+      // Step 6: Apply the appropriate styling to the circles
+      // (You can add more styles like axis, labels, tooltips, etc., as per your requirement)
+
+      // X-axis
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(xScale));
+
+      // Y-axis
+      svg.append("g").call(d3.axisLeft(yScale));
+
+      // Axes labels (optional)
+      svg
+        .append("text")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom - 5)
+        .style("text-anchor", "middle")
+        .text("School Score");
+
+      svg
+        .append("text")
+        .attr("x", -height / 2)
+        .attr("y", -margin.left + 15)
+        .style("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .text("Enrollment");
+    });
+
+
+    // functions for when the different slides are accessed
+      document.getElementById("button1").onclick = 
+        function() {document.getElementById("aftervis").innerHTML = "<p style= 'color:green;'>page 1</p>"};
+
+      document.getElementById("button2").onclick = 
+        function() {document.getElementById("aftervis").innerHTML = "<p style= 'color:red;'>page 2</p>"};
+
+      document.getElementById("button3").onclick = 
+        function() {document.getElementById("aftervis").innerHTML = "<p style= 'color:blue;'>page 3</p>"};
       
     </script>
     
