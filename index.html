@@ -213,7 +213,6 @@
       const xScale = d3.scaleLinear().domain(bounds[x]).range([0, width]);
       const yScale = d3.scaleLinear().domain(bounds[y]).range([height, 0]);
 
-      // Step 4: Create the SVG element for the scatterplot
 
       document.getElementById("visualization").innerHTML = ""
 
@@ -237,7 +236,6 @@
           .style('opacity',0)
           .style('font-size',"10px")
 
-      // Step 5: Bind the data to the SVG elements and create circles for each data point
       const circles = svg
         .selectAll("circle")
         .data(data)
@@ -267,8 +265,6 @@
 
         
 
-      // Step 6: Apply the appropriate styling to the circles
-      // (You can add more styles like axis, labels, tooltips, etc., as per your requirement)
 
       // X-axis
       svg
@@ -279,7 +275,6 @@
       // Y-axis
       svg.append("g").call(d3.axisLeft(yScale));
 
-      // Axes labels (optional)
       svg
         .append("text")
         .attr("x", width / 2)
