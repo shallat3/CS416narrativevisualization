@@ -16,9 +16,19 @@
           text-align: center;
         }
 
+        #rightside {
+          
+          margin-top: 5%;
+          margin-bottom: 5%;
+          margin-left: 5%;
+          margin-right: 5%;
+          height:100%;
+          border-radius:5%
+          
+        }
+
         svg {
           background-color:lightgray;
-          opacity:0.3;
           height:400px;
           width:600px;
           border-radius: 20px;
@@ -42,6 +52,17 @@
           clear: both;
         }
 
+        .hidden {
+          display: none;
+        }
+
+        .tooltip {
+          position: absolute;
+          pointer-events: none;
+          background: #000;
+          color: #fff;
+        }
+
         
         
       </style>
@@ -58,74 +79,81 @@
             attendance in New York City's public schools.</p>
       </div>
       <div class="column right">
-        <div id="marginbox" style="margin-left:10%; margin-right:10%; margin-bottom:5%; margin-top:5%;">
-          <div id="selectorbar" style="width:80%; float:center;">
-            <button id="backbutton" style="float:left;">back</button>
-            <button id="button1">1</button>
-            <button id="button2">2</button>
-            <button id="button3">3</button>
-            <button id="button4">4</button>
-            <button id="nextbutton" style="float:right;">next</button>
-          </div>
-          <svg id="visualization"></svg>
-          <div id="aftervis">
-            <div id="slide4after">
-              <h2>4: Interactive Visualization:</h2>
-              <p>Here, you can adjust the graph to your own desired parameters.</p>
-              <div class="row" style="text-align:center;">
-                <div class="column">
-                  <h4>X-axis:</h4>
-                  <select name="xaxis" id="xaxisselect">
-                    <option value="Student_Attendance_Rate" selected>Attendance</option>
-                    <option value="Average_Math_Proficiency">Math Score</option>
-                    <option value="Average_ELA_Proficiency">Ela Score</option>
-                    <option value="avg_math_ela">Average Math and Ela Score</option>
-                  </select>
+        <div id="rightside">
+          <div id="marginbox" style="margin-left:10%; margin-right:10%; margin-bottom:5%; margin-top:5%;">
+            <div id="selectorbar" style="width:80%; float:center;">
+              <button id="backbutton" style="float:left;">back</button>
+              <button id="button1">1</button>
+              <button id="button2">2</button>
+              <button id="button3">3</button>
+              <button id="button4">4</button>
+              <button id="nextbutton" style="float:right;">next</button>
+            </div>
+            <svg id="visualization"></svg>
+            <div id="aftervis">
+              <div id="slide1after"></div>
+              <div id="slide2after"></div>
+              <div id="slide3after"></div>
+              <div id="slide4after">
+                <h2>4: Interactive Visualization:</h2>
+                <p>Here, you can adjust the graph to your own desired parameters.</p>
+                <div class="row" style="text-align:center;">
+                  <div class="column">
+                    <h4>X-axis:</h4>
+                    <select name="xaxis" id="xaxisselect">
+                      <option value="Student_Attendance_Rate" selected>Attendance</option>
+                      <option value="Average_Math_Proficiency">Math Score</option>
+                      <option value="Average_ELA_Proficiency">Ela Score</option>
+                      <option value="avg_math_ela">Average Math and Ela Score</option>
+                    </select>
+                  </div>
+                  <div class="column">
+                    <h4>Y-axis:</h4>
+                    <select name="yaxis" id="yaxisselect">
+                      <option value="Student_Attendance_Rate">Attendance</option>
+                      <option value="Average_Math_Proficiency">Math Score</option>
+                      <option value="Average_ELA_Proficiency">Ela Score</option>
+                      <option value="avg_math_ela" selected>Average Math and Ela Score</option>
+                    </select>
+                  </div>
+                  <div class="column">
+                    <h4>One Point Per:</h4>
+                    <select name="groupby" id="groupbyselect">
+                      <option value="data/NYschools.csv" selected>School</option>
+                      <option value="data/bydistrict.csv">District</option>
+                      <option value="data/byborough.csv">Borough</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="column">
-                  <h4>Y-axis:</h4>
-                  <select name="yaxis" id="yaxisselect">
-                    <option value="Student_Attendance_Rate">Attendance</option>
-                    <option value="Average_Math_Proficiency">Math Score</option>
-                    <option value="Average_ELA_Proficiency">Ela Score</option>
-                    <option value="avg_math_ela" selected>Average Math and Ela Score</option>
-                  </select>
-                </div>
-                <div class="column">
-                  <h4>One Point Per:</h4>
-                  <select name="groupby" id="groupbyselect">
-                    <option value="data/NYschools.csv" selected>School</option>
-                    <option value="data/bydistrict.csv">District</option>
-                    <option value="data/byborough.csv">Borough</option>
-                  </select>
-                </div>
-              </div>
+                
               
-            
+              </div>
             </div>
           </div>
         </div>
+        
         
       </div>
     </div>
     
     
     <script src="https://d3js.org/d3.v6.min.js"></script>
-
     <script>
 
     const margin = { top: 20, right: 30, bottom: 40, left: 50 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
+
     
 
     function slide4(x,y,points) {
       d3.csv(points).then(data => {
-        console.log(data)
 
-      // Step 2: Load the data using D3.js
-    
-      // Step 3: Define scales for mapping data values to the visualization space
+      sdorb = {
+        "data/NYschools.csv" : "School_Name",
+        "data/bydistrict.csv": "District",
+        "data/byborough.csv": "boroughname"
+      }
       
       bounds = {
         "Student_Attendance_Rate" : [0.8,1],
@@ -141,8 +169,6 @@
         "avg_math_ela" : "Average Math and Ela Proficiency"
       }
 
-      
-
       const xScale = d3.scaleLinear().domain(bounds[x]).range([0, width]);
       const yScale = d3.scaleLinear().domain(bounds[y]).range([height, 0]);
 
@@ -157,17 +183,48 @@
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
+
+        var tooltip = d3.select("body")
+          .append("div")
+          .attr("class", "tooltip")
+          .style("background-color", "black")
+          .style("color","white")
+          .style("border", "solid")
+          .style("border-width", "1px")
+          .style("border-radius", "5px")
+          .style("padding", "10px")
+          .style('opacity',0)
+          .style('font-size',"10px")
+
       // Step 5: Bind the data to the SVG elements and create circles for each data point
       const circles = svg
         .selectAll("circle")
         .data(data)
         .enter()
         .append("circle")
-        
         .attr("cy", d => yScale(d[y]))
         .attr("cx", d => xScale(d[x])) 
         .attr("r", 5) // Set the radius of the circles
-        .attr("fill", "blue"); // Set the fill color of the circles
+        .attr("fill", "green")
+        .attr("stroke","black");
+
+        circles
+        .on("mouseover", function(d) {
+            
+            console.log(d.srcElement.__data__)
+            tooltip.style("opacity", 1)
+              .html(d.srcElement.__data__[sdorb[points]] + 
+                "</br> Attendance: " + Number(d.srcElement.__data__.Student_Attendance_Rate).toFixed(2)
+                + "</br> Math Score: " + Number(d.srcElement.__data__.Average_Math_Proficiency).toFixed(2)
+                + "</br> ELA Score: " + Number(d.srcElement.__data__.Average_ELA_Proficiency).toFixed(2))
+              .style("left", (d.pageX-25) + "px")
+              .style("top", (d.pageY-100) + "px")
+            })
+            .on("mouseout", function(d) {
+              tooltip.style("opacity", 0)
+            }); // Set the fill color of the circles
+
+        
 
       // Step 6: Apply the appropriate styling to the circles
       // (You can add more styles like axis, labels, tooltips, etc., as per your requirement)
@@ -196,7 +253,9 @@
         .style("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .text(descriptions[y]);
-    });
+
+        
+            });
     };
 
     function first() {
