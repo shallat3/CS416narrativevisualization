@@ -18,7 +18,7 @@
 
         #rightside {
           
-          margin-top: 5%;
+          margin-top: 2.5%;
           margin-bottom: 5%;
           margin-left: 5%;
           margin-right: 5%;
@@ -63,6 +63,13 @@
           color: #fff;
         }
 
+        p {
+          color:darkslategray;
+        }
+        ul {
+          color:darkslategray;
+        }
+
         
         
       </style>
@@ -73,10 +80,21 @@
     <div class=row>
       <div class="column left">
         <h1>Schools in New York</h1>
-          <p style="color:darkslategray;" >Every year, students in New York City 
+        <hr>
+          <p >Every year, students in New York City 
             participate in a lottery in an attempt to further their education in the best educational institutions. This process 
             seems very make-or-break, but how much does it actually matter? Here, we explore the relationships between Math and ELA scores and 
             attendance in New York City's public schools.</p>
+            <hr>
+          <p style="margin-top: 20px;">This site was created by Joey Shallat for the CS 416 Narrative Visualization project.</p>
+          <h2>Credits:</h2>
+          <hr>
+          <ul>
+            <li>Data taken from <a href="https://www.kaggle.com/datasets/passnyc/data-science-for-good" target="_blank">kaggle</a> 
+              and further processed locally.</li>
+            <li>The <a href="https://d3js.org/">d3.js</a> library was used to create all visualizations.</li>
+          </ul>
+          
       </div>
       <div class="column right">
         <div id="rightside">
@@ -89,14 +107,37 @@
               <button id="button4">4</button>
               <button id="nextbutton" style="float:right;">next</button>
             </div>
+            <div id="graphtitle">
+              <div id="title1"><h2>Attendance vs. Subject Proficiency in New York Schools</h2></div>
+              <div id="title2"><h2>Attendance vs. Subject Proficiency in New York Boroughs</h2></div>
+              <div id="title3"><h2>Attendance vs. Subject Proficiency in New York School Districts</h2></div>
+              <div id="title4"><h2>Choose Your Own Parameters:</h2></div>
+            </div>
             <svg id="visualization"></svg>
             <div id="aftervis">
-              <div id="slide1after"></div>
-              <div id="slide2after"></div>
-              <div id="slide3after"></div>
+              <div id="slide1after">
+                  <p>This plot shows the relationship between student attendance and the average of both ELA and Math 
+                    subject proficiency. There is one point for every school in New York City. 
+                    Hovering over any point reveals the name of the school, its attendance, and its ELA and Math Proficiency Scores.
+                  </p>
+              </div>
+              <div id="slide2after">
+                <p>This plot shows the relationship between student attendance and the average of both ELA and Math 
+                  subject proficiency. There is one point for each borough of New York City. 
+                  Hovering over any point reveals the name of the Borough, its attendance, and its ELA and Math Proficiency Scores.
+                </p>
+              </div>
+              <div id="slide3after">
+                <p>This plot shows the relationship between student attendance and the average of both ELA and Math 
+                  subject proficiency. There is one point for every school district in New York City. 
+                  Hovering over any point reveals the number of the schooldistrict , its attendance, and its ELA and Math Proficiency Scores.
+                </p>
+              </div>
               <div id="slide4after">
-                <h2>4: Interactive Visualization:</h2>
-                <p>Here, you can adjust the graph to your own desired parameters.</p>
+                <p>Here, you can adjust the graph to your own desired parameters. This allows you to see
+                  the relationship between attendance, Math scores and ELA scores between the schools, boroughs, and districts
+                  of New York City.
+                </p>
                 <div class="row" style="text-align:center;">
                   <div class="column">
                     <h4>X-axis:</h4>
@@ -261,25 +302,53 @@
     function first() {
       state = 1;
       slide4("Student_Attendance_Rate","avg_math_ela","data/NYschools.csv");
+      document.getElementById("slide1after").style.display = "";
+      document.getElementById("title1").style.display = "";
       document.getElementById("slide4after").style.display = "none";
+      document.getElementById("slide3after").style.display = "none";
+      document.getElementById("slide2after").style.display = "none";
+      document.getElementById("title2").style.display = "none";
+      document.getElementById("title3").style.display = "none";
+      document.getElementById("title4").style.display = "none";
     }
 
     function second() {
       state = 2;
       slide4("Student_Attendance_Rate","avg_math_ela","data/byborough.csv");
+      document.getElementById("slide1after").style.display = "none";
+      document.getElementById("title1").style.display = "none";
       document.getElementById("slide4after").style.display = "none";
+      document.getElementById("slide3after").style.display = "none";
+      document.getElementById("slide2after").style.display = "";
+      document.getElementById("title2").style.display = "";
+      document.getElementById("title3").style.display = "none";
+      document.getElementById("title4").style.display = "none";
     }
 
     function third() {
       state = 3;
       slide4("Student_Attendance_Rate","avg_math_ela","data/bydistrict.csv");
+      document.getElementById("slide1after").style.display = "none";
+      document.getElementById("title1").style.display = "none";
       document.getElementById("slide4after").style.display = "none";
+      document.getElementById("slide3after").style.display = "";
+      document.getElementById("slide2after").style.display = "none";
+      document.getElementById("title2").style.display = "none";
+      document.getElementById("title3").style.display = "";
+      document.getElementById("title4").style.display = "none";
     }
     
     function fourth() {
       state = 4;
       slide4("Student_Attendance_Rate","avg_math_ela","data/NYschools.csv");
+      document.getElementById("slide1after").style.display = "none";
+      document.getElementById("title1").style.display = "none";
       document.getElementById("slide4after").style.display = "";
+      document.getElementById("slide3after").style.display = "none";
+      document.getElementById("slide2after").style.display = "none";
+      document.getElementById("title2").style.display = "none";
+      document.getElementById("title3").style.display = "none";
+      document.getElementById("title4").style.display = "";
     }
     
     first();
