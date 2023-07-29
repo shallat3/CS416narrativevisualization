@@ -64,10 +64,46 @@
             <button id="button1">1</button>
             <button id="button2">2</button>
             <button id="button3">3</button>
+            <button id="button4">4</button>
             <button id="nextbutton" style="float:right;">next</button>
           </div>
           <svg id="visualization"></svg>
-          <p id="aftervis"></p>
+          <div id="aftervis">
+            <div id="slide4after">
+              <h2>4: Interactive Visualization:</h2>
+              <p>Here, you can adjust the graph to your own desired parameters.</p>
+              <div class="row" style="text-align:center;">
+                <div class="column">
+                  <h4>X-axis:</h4>
+                  <select name="xaxis" id="xaxisselect">
+                    <option value="Student_Attendance_Rate" selected>Attendance</option>
+                    <option value="Average_Math_Proficiency">Math Score</option>
+                    <option value="Average_ELA_Proficiency">Ela Score</option>
+                    <option value="avg_math_ela">Average Math and Ela Score</option>
+                  </select>
+                </div>
+                <div class="column">
+                  <h4>Y-axis:</h4>
+                  <select name="yaxis" id="yaxisselect">
+                    <option value="Student_Attendance_Rate">Attendance</option>
+                    <option value="Average_Math_Proficiency">Math Score</option>
+                    <option value="Average_ELA_Proficiency">Ela Score</option>
+                    <option value="avg_math_ela" selected>Average Math and Ela Score</option>
+                  </select>
+                </div>
+                <div class="column">
+                  <h4>One Point Per:</h4>
+                  <select name="groupby" id="groupbyselect">
+                    <option value="data/NYschools.csv" selected>School</option>
+                    <option value="data/bydistrict.csv">District</option>
+                    <option value="data/byborough.csv">Borough</option>
+                  </select>
+                </div>
+              </div>
+              
+            
+            </div>
+          </div>
         </div>
         
       </div>
@@ -81,16 +117,39 @@
     const margin = { top: 20, right: 30, bottom: 40, left: 50 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
-      d3.csv("data/NYschools.csv").then(data => {
+    
+
+    function slide4(x,y,points) {
+      d3.csv(points).then(data => {
         console.log(data)
 
       // Step 2: Load the data using D3.js
     
       // Step 3: Define scales for mapping data values to the visualization space
-      const xScale = d3.scaleLinear().domain([0.8,1]).range([0, width]);
-      const yScale = d3.scaleLinear().domain([1.5, 4]).range([height, 0]);
+      
+      bounds = {
+        "Student_Attendance_Rate" : [0.8,1],
+        "Average_Math_Proficiency" : [1.5,4],
+        "Average_ELA_Proficiency" : [1.5,4],
+        "avg_math_ela" : [1.5,4]
+      }
+
+      descriptions = {
+        "Student_Attendance_Rate" : "Attendance",
+        "Average_Math_Proficiency" : "Math Proficiency Score",
+        "Average_ELA_Proficiency" : "Ela Proficiency Score",
+        "avg_math_ela" : "Average Math and Ela Proficiency"
+      }
+
+      
+
+      const xScale = d3.scaleLinear().domain(bounds[x]).range([0, width]);
+      const yScale = d3.scaleLinear().domain(bounds[y]).range([height, 0]);
 
       // Step 4: Create the SVG element for the scatterplot
+
+      document.getElementById("visualization").innerHTML = ""
+
       const svg = d3
         .select("#visualization")
         .attr("width", width + margin.left + margin.right)
@@ -105,8 +164,8 @@
         .enter()
         .append("circle")
         
-        .attr("cy", d => yScale(d.avg_math_ela))
-        .attr("cx", d => xScale(d.Student_Attendance_Rate)) 
+        .attr("cy", d => yScale(d[y]))
+        .attr("cx", d => xScale(d[x])) 
         .attr("r", 5) // Set the radius of the circles
         .attr("fill", "blue"); // Set the fill color of the circles
 
@@ -128,7 +187,7 @@
         .attr("x", width / 2)
         .attr("y", height + margin.bottom - 5)
         .style("text-anchor", "middle")
-        .text("Attendance Rating");
+        .text(descriptions[x]);
 
       svg
         .append("text")
@@ -136,19 +195,102 @@
         .attr("y", -margin.left + 15)
         .style("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .text("Average Math and ELA score");
+        .text(descriptions[y]);
     });
+    };
 
+    function first() {
+      state = 1;
+      slide4("Student_Attendance_Rate","avg_math_ela","data/NYschools.csv");
+      document.getElementById("slide4after").style.display = "none";
+    }
+
+    function second() {
+      state = 2;
+      slide4("Student_Attendance_Rate","avg_math_ela","data/byborough.csv");
+      document.getElementById("slide4after").style.display = "none";
+    }
+
+    function third() {
+      state = 3;
+      slide4("Student_Attendance_Rate","avg_math_ela","data/bydistrict.csv");
+      document.getElementById("slide4after").style.display = "none";
+    }
+    
+    function fourth() {
+      state = 4;
+      slide4("Student_Attendance_Rate","avg_math_ela","data/NYschools.csv");
+      document.getElementById("slide4after").style.display = "";
+    }
+    
+    first();
 
     // functions for when the different slides are accessed
+      document.getElementById("nextbutton").onclick = 
+      function() {
+        if (state === 1) {
+          second();
+        } else if (state === 2) {
+          third();
+        } else if (state === 3) {
+          fourth();
+        } else if (state === 4) {
+        }
+      }
+
+      document.getElementById("backbutton").onclick = 
+      function() {
+        if (state === 1) {
+          
+        } else if (state === 2) {
+          first();
+        } else if (state === 3) {
+          second();
+        } else if (state === 4) {
+          third();
+        }
+      }
+
       document.getElementById("button1").onclick = 
-        function() {document.getElementById("aftervis").innerHTML = "<p style= 'color:green;'>page 1</p>"};
+      function() {
+          first();
+        };
 
       document.getElementById("button2").onclick = 
-        function() {document.getElementById("aftervis").innerHTML = "<p style= 'color:red;'>page 2</p>"};
+        function() {
+          second();
+        };
 
       document.getElementById("button3").onclick = 
-        function() {document.getElementById("aftervis").innerHTML = "<p style= 'color:blue;'>page 3</p>"};
+        function() {
+          third();
+        };
+
+      document.getElementById("button4").onclick = 
+        function() {
+          fourth();
+        };
+
+      document.getElementById("xaxisselect").onchange = function(){
+          var x = document.getElementById("xaxisselect").value;
+          var y = document.getElementById("yaxisselect").value;
+          var points = document.getElementById("groupbyselect").value;
+          slide4(x,y,points);
+      };
+
+      document.getElementById("yaxisselect").onchange = function(){
+          var x = document.getElementById("xaxisselect").value;
+          var y = document.getElementById("yaxisselect").value;
+          var points = document.getElementById("groupbyselect").value;
+          slide4(x,y,points);
+      };
+
+      document.getElementById("groupbyselect").onchange = function(){
+          var x = document.getElementById("xaxisselect").value;
+          var y = document.getElementById("yaxisselect").value;
+          var points = document.getElementById("groupbyselect").value;
+          slide4(x,y,points);
+      };
       
     </script>
     
