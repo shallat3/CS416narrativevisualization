@@ -70,6 +70,15 @@
           color:darkslategray;
         }
 
+        .annotation {
+          background-color:white;
+          border-radius:5%;
+          font-size:12px;
+          width:30px;
+        }
+
+        
+
         
         
       </style>
@@ -113,7 +122,9 @@
               <div id="title3"><h2>Attendance vs. Subject Proficiency in New York School Districts</h2></div>
               <div id="title4"><h2>Choose Your Own Parameters:</h2></div>
             </div>
-            <svg id="visualization"></svg>
+            <svg id="visualization">
+              <text id="scene1annot">hello!</text>
+            </svg>
             <div id="aftervis">
               <div id="slide1after">
                   <p>This plot shows the relationship between student attendance and the average of both ELA and Math 
@@ -194,6 +205,20 @@
         "data/NYschools.csv" : "School_Name",
         "data/bydistrict.csv": "District",
         "data/byborough.csv": "boroughname"
+      }
+
+      annots1 = {
+        1: "There is clearly a strong positive correlation between ",
+        2: "Between Boroughs, there is much less spread. However,",
+        3: "The trend is consistent when considering school districts.",
+        4: ""
+      }
+
+      annots2 = {
+        1: "school attendance and scoring in New York Schools.",
+        2: "there still exists a noticeable difference.",
+        3: "Besides a few outliers, the positive correlation is strong.",
+        4: ""
       }
       
       bounds = {
@@ -289,6 +314,18 @@
         .style("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .text(descriptions[y]);
+
+      svg
+      .append("text")
+      .attr("class","annotation")
+      .attr("x", 50)
+      .attr("y",50)
+      .text(annots1[state])
+      svg.append("text")
+      .attr("class","annotation")
+      .attr("x",50)
+      .attr("y",65)
+      .text(annots2[state])
 
         
             });
